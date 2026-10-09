@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concurso Gota a Gota</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💧</text></svg>">
+<style>
+:root{color-scheme:light;--p:#2A9DB8;--deep:#2F5D8A;--aqua:#7AE0D0;--bg:#F0F4F8;--card:#fff;--tx:#1f2d3d;--mut:#667789;--co:#FF8A65;--bd:#dde6ee}
+*{box-sizing:border-box}
+body{margin:0;font-family:Nunito,Poppins,system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+h1,h2,h3{font-family:Poppins,system-ui,sans-serif;margin:.3em 0}
+header{background:linear-gradient(135deg,var(--deep),var(--p));color:#fff;padding:12px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+header b{font-size:1.2rem}header small{opacity:.85;flex:1}
+.wave{display:block;width:100%;height:30px;margin-top:-1px;fill:var(--p)}
+main{max-width:980px;margin:auto;padding:16px}
+.btn{background:var(--co);color:#fff;border:0;border-radius:24px;padding:10px 20px;font-weight:700;cursor:pointer;font-size:1rem}
+.btn.s{background:var(--p)}.btn.g{background:transparent;color:inherit;border:1.5px solid currentColor}.btn.sm{padding:5px 12px;font-size:.85rem}
+header .btn.g{color:#fff}.btn:disabled{opacity:.5}
+input,textarea,select{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:12px;background:var(--card);color:var(--tx);font:inherit;margin:4px 0 10px}
+.card{background:var(--card);border-radius:18px;padding:16px;box-shadow:0 3px 14px #2f5d8a1a}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:20px}
+.big{cursor:pointer;text-align:center;padding:40px 18px;transition:.3s;border:2px solid transparent}
+.big:hover{transform:scale(1.05);border-color:var(--p)}.big .ic{font-size:3.2rem}
+.drop{border:3px dashed var(--p);border-radius:22px;text-align:center;padding:36px 10px;cursor:pointer}
+.drop .plus{font-size:4rem;color:var(--p);line-height:1}
+.tabs{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}.tabs button{flex:1}
+.tabs .on{background:var(--p);color:#fff;border-color:var(--p)}
+.grid{display:flex;flex-direction:column;gap:14px;max-width:560px;margin:12px auto 0}
+.post{padding:0;overflow:hidden;animation:rise .5s both}
+.post .m{max-height:460px;background:#e9eef3;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.post .m img,.post .m video{width:100%;max-height:460px;object-fit:contain}
+.post .m img{cursor:zoom-in}
+.i{padding:10px 14px}
+@keyframes rise{from{transform:translateY(30px);opacity:0}}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.sp{flex:1}
+.mut{color:var(--mut);font-size:.88rem}
+.av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--aqua));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+.fb{background:none;border:0;padding:8px;border-radius:8px;cursor:pointer;color:var(--mut);font-weight:700;font-size:.95rem}
+.fb:hover{background:var(--bg)}.fb.on{color:var(--p)}
+.lk{background:none;border:0;cursor:pointer;color:var(--mut);font-size:.8rem}
+.cms{padding:6px 14px 14px;border-top:1px solid var(--bd)}
+.cm{background:var(--bg);border-radius:12px;padding:6px 12px;margin:6px 0}
+.warn{background:#fff3cd;color:#6b5200;border-radius:10px;padding:8px 12px;font-size:.85rem;margin:6px 0}
+.pdf{display:block;padding:30px;text-align:center;font-size:2.4rem;color:var(--p);text-decoration:none;font-weight:700}
+.th{width:90px;height:70px;overflow:hidden;border-radius:10px;background:#e9eef3}.th img,.th video{width:100%;height:100%;object-fit:cover}.th .pdf{padding:14px;font-size:1.4rem}
+.modal{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;padding:14px;z-index:20;cursor:zoom-out}
+.modal img{max-width:100%;max-height:92vh;border-radius:12px}
+#sea{position:fixed;left:0;right:0;bottom:-100%;height:100%;background:linear-gradient(var(--p),var(--deep));z-index:50;pointer-events:none;transition:bottom .45s ease-in}
+#sea.up{bottom:0}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--deep);color:#fff;padding:10px 20px;border-radius:20px;z-index:60;max-width:90%;text-align:center}
+.lupa{background:none;border:0;font-size:1.4rem;cursor:pointer}
+#sq{width:0;opacity:0;padding:0;margin:0;border-width:0;transition:.3s}#sq.o{width:200px;opacity:1;padding:8px 12px;border-width:1.5px}
+.cd{text-align:center;background:var(--card);border-radius:14px;padding:8px;margin:10px auto;max-width:560px;font-weight:700;color:var(--deep)}
+.bub{position:fixed;bottom:-30px;border-radius:50%;background:#7ae0d055;animation:fl linear infinite;z-index:-1}
+@keyframes fl{to{transform:translateY(-110vh)}}
+</style></head><body>
+<div id="sea"></div><div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const SB_URL='https://ixoolgmtnbkhkescahfi.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4b29sZ210bmJraGtlc2NhaGZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1NzYwMDAsImV4cCI6MjEwNzE1MjAwMH0.H1iUr3dFQyrwe-4PkzWpjtT73hzyEjObepkuTQLTg8w';
+const DOM='@huanuco.coar.edu.pe',H=36e5;
+// persistSession:false => al recargar la página se vuelve a pedir el inicio de sesión
+const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false,autoRefreshToken:true,detectSessionInUrl:false}});
+const S={user:null,admin:false,view:'login',stack:[],tab:'up',at:'pend',q:'',sq:0,file:null,posts:[],vc:{},cm:[],my:null,openC:{},mine:[],zoom:null,nick:null,reg:0,
+ adm:{posts:[],cm:[],rep:[],vc:{}},cfg:{title:'Gota a Gota',sub:'Concurso de arte por el cuidado del agua',color:'#2A9DB8',close:''}};
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const words=s=>s.trim()?s.trim().split(/\s+/).length:0;
+const toast=m=>{const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.append(d);setTimeout(()=>d.remove(),3200)};
+const pubUrl=p=>sb.storage.from('obras').getPublicUrl(p).data.publicUrl;
+const ago=t=>{const m=Math.floor((Date.now()-new Date(t))/6e4);return m<60?'hace '+Math.max(m,1)+' min':m<1440?'hace '+Math.floor(m/60)+' h':'hace '+Math.floor(m/1440)+' d'};
+const closeD=()=>S.cfg.close?new Date(S.cfg.close+'T23:59:59'):null,closed=()=>closeD()&&Date.now()>closeD();
+const chk=r=>{if(r.error)throw r.error;return r.data};
+const BAD=new Set('puta puto putas putos mierda carajo cojudo cojuda conchatumare conchetumare huevon huevona weon webon pendejo pendeja imbecil idiota estupido estupida maricon marica cabron chucha verga cagada malparido gilipollas zorra culero hdp ctm ptm csm mrd fuck fucking shit bitch asshole'.split(' '));
+const STEM=/^(cojud|huevon|pendej|mierd|imbecil|estupid|maricon|cabron|conchatu|conchetu|hijue|hijode|malpari|gilipoll|putamadre)/;
+const bad=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/@/g,'a').replace(/\$/g,'s').split(/[^a-z]+/).some(w=>w&&(BAD.has(w)||STEM.test(w)));
+
+/* ---------- navegación ---------- */
+function go(v,isBack){const e=$('#sea');e.classList.add('up');setTimeout(async()=>{
+ if(!isBack){if(v==='home')S.stack=[];else if(S.view!==v)S.stack.push(S.view);history.pushState({},'')}
+ S.view=v;S.zoom=null;S.file=null;await load(v);render();
+ e.style.transition='bottom .45s ease-out';e.classList.remove('up');setTimeout(()=>e.style.transition='',500)},470)}
+function back(){let v=S.stack.pop()||'home';if(v==='login'&&S.user)v='home';go(v,1)}
+window.addEventListener('popstate',()=>{if(S.user){if(S.view!=='home'&&S.view!=='login')back();else history.pushState({},'')}});
+async function load(v){try{if(v==='vote')await loadFeed();if(v==='up'&&S.tab==='mine')await loadMine();if(v==='admin')await loadAdmin()}catch(e){toast(e.message)}}
+async function logout(){S.user=null;S.admin=false;S.stack=[];await sb.auth.signOut();go('login')}
+
+/* ---------- sesión ---------- */
+sb.auth.onAuthStateChange((ev,ses)=>{
+ if(ses&&!S.user){const e=(ses.user.email||'').toLowerCase();
+  if(!e.endsWith(DOM)){sb.auth.signOut();toast('Solo cuentas '+DOM);return}
+  S.user=ses.user;boot()}
+ else if(!ses&&S.user){S.user=null;go('login')}});
+async function boot(){try{const[c,a]=await Promise.all([sb.from('config').select('data').eq('id',1).single(),sb.rpc('is_admin')]);
+ if(c.data&&c.data.data)S.cfg={...S.cfg,...c.data.data};S.admin=a.data===true}catch(e){}
+ S.stack=[];go('home')}
+async function auth(){const e=$('#em').value.trim().toLowerCase(),p=$('#pw').value;
+ if(!e.endsWith(DOM)||e.length<=DOM.length)return toast('Usa tu correo '+DOM);
+ if(p.length<8)return toast('La contraseña debe tener al menos 8 caracteres');
+ const b=$('#ab');b.disabled=true;
+ try{if(S.reg){
+   if(!$('#ok').checked){b.disabled=false;return toast('Acepta las bases del concurso')}
+   if(p!==$('#pw2').value){b.disabled=false;return toast('Las contraseñas no coinciden')}
+   const r=await sb.auth.signUp({email:e,password:p,options:{data:{code:$('#cd').value.trim()}}});
+   if(r.error)throw r.error;
+   if(!r.data.session){b.disabled=false;toast('Si ya tenías cuenta, usa la pestaña Entrar')}}
+  else{const r=await sb.auth.signInWithPassword({email:e,password:p});if(r.error)throw r.error}}
+ catch(x){b.disabled=false;const m=x.message||'';
+  toast(/Database error|code|Código/i.test(m)?'Código de acceso o correo no válido':/Invalid login/i.test(m)?'Correo o contraseña incorrectos':/already|registered/i.test(m)?'Ese correo ya está registrado: usa Entrar':m)}}
+
+/* ---------- datos ---------- */
+async function loadFeed(){
+ const[p,v,c,m]=await Promise.all([sb.from('posts').select('*').eq('approved',true).order('created_at',{ascending:false}),
+  sb.rpc('vote_counts'),sb.from('comments').select('*').order('created_at'),sb.from('votes').select('post_id').eq('user_id',S.user.id)]);
+ S.posts=chk(p);S.vc=Object.fromEntries((chk(v)||[]).map(x=>[x.post_id,Number(x.n)]));S.cm=chk(c);S.my=(chk(m)[0]||{}).post_id||null}
+async function loadMine(){
+ const[p,v]=await Promise.all([sb.from('posts').select('*').eq('owner',S.user.id).order('created_at',{ascending:false}),sb.rpc('vote_counts')]);
+ S.mine=chk(p);S.vc=Object.fromEntries((chk(v)||[]).map(x=>[x.post_id,Number(x.n)]))}
+async function loadAdmin(){
+ const[p,c,r,v]=await Promise.all([sb.from('posts').select('*').order('created_at',{ascending:false}),sb.from('comments').select('*').order('created_at',{ascending:false}),
+  sb.from('reports').select('*,posts(title),comments(body)').order('created_at',{ascending:false}),sb.rpc('vote_counts')]);
+ S.adm={posts:chk(p),cm:chk(c),rep:chk(r),vc:Object.fromEntries((chk(v)||[]).map(x=>[x.post_id,Number(x.n)]))}}
+
+/* ---------- vistas ---------- */
+function render(){document.documentElement.style.setProperty('--p',S.cfg.color);
+ $('#app').innerHTML=head()+'<main>'+({login:L,home:Hm,up:U,vote:V,admin:A}[S.view])()+'</main>'+(S.zoom?`<div class="modal" onclick="S.zoom=null;render()"><img src="${S.zoom}" alt=""></div>`:'')}
+const head=()=>`<header>${S.user&&S.view!=='home'?'<button class="btn g sm" onclick="back()" title="Atrás">←</button>':''}<b>💧 ${esc(S.cfg.title)}</b><small>${esc(S.cfg.sub)}</small>${S.user?`<button class="btn g sm" onclick="go('home')">Inicio</button><button class="btn g sm" onclick="logout()">Salir</button>`:''}</header>
+<svg class="wave" viewBox="0 0 1200 30" preserveAspectRatio="none"><path d="M0 0h1200v10c-150 25-300 25-450 0S450-15 300 10 150 25 0 10z"/></svg>`;
+const cd=()=>{const d=closeD();if(!d)return'';const n=Math.ceil((d-Date.now())/864e5);return `<div class="cd">${closed()?'⌛ El concurso ya cerró':'⏳ Quedan '+n+' día'+(n==1?'':'s')+' · cierra el '+S.cfg.close}</div>`};
+function L(){const r=S.reg;return `<div class="card" style="max-width:420px;margin:30px auto"><div class="tabs"><button class="btn g ${r?'':'on'}" onclick="S.reg=0;render()">Entrar</button><button class="btn g ${r?'on':''}" onclick="S.reg=1;render()">Crear cuenta</button></div>
+<p class="mut" style="text-align:center">Estudiantes y profesores con correo ${DOM}</p>
+<input id="em" type="email" placeholder="tucorreo${DOM}" autocomplete="username"><input id="pw" type="password" placeholder="Contraseña (mínimo 8 caracteres)" autocomplete="${r?'new-password':'current-password'}" onkeydown="if(event.key=='Enter'&&!S.reg)auth()">
+${r?`<input id="pw2" type="password" placeholder="Repite la contraseña" autocomplete="new-password"><input id="cd" placeholder="Código de acceso del concurso"><label class="mut" style="display:block;margin-bottom:10px"><input type="checkbox" id="ok" style="width:auto;margin-right:6px">Acepto las bases del concurso</label>`:''}
+<button class="btn s" id="ab" style="width:100%" onclick="auth()">${r?'Crear cuenta':'Entrar'}</button>
+<details class="mut" style="margin-top:12px"><summary>Ver bases</summary><ul><li>Obras sobre el cuidado del agua: memes, videos, afiches.</li><li>Se publican con un apodo de artista; no se permiten palabras ofensivas.</li><li>Un solo voto por persona; no se puede votar por la obra propia.</li><li>Puedes editar tu obra en las primeras 24 h y borrarla en las primeras 72 h.</li><li>Las obras se publican tras ser aprobadas.</li></ul></details></div>`}
+const Hm=()=>cd()+`<div class="two"><div class="card big" onclick="S.tab='up';go('up')"><div class="ic">🎨</div><h2>Sube tu obra</h2><p class="mut">Fotos, videos o PDF</p></div>
+<div class="card big" onclick="go('vote')"><div class="ic">👍</div><h2>Vota y descubre</h2><p class="mut">Mira, comenta y apoya</p></div>
+${S.admin?`<div class="card big" onclick="go('admin')"><div class="ic">🛠️</div><h2>Panel de control</h2><p class="mut">Solo para ti</p></div>`:''}</div>`;
+function media(p){const u=pubUrl(p.file_path);
+ if(p.kind==='imagen')return `<img src="${u}" alt="" loading="lazy" onclick="S.zoom='${u}';render()">`;
+ if(p.kind==='video')return `<video src="${u}" controls preload="metadata"></video>`;
+ return `<a class="pdf" href="${u}" target="_blank" rel="noopener">📄<br>Abrir PDF</a>`}
+
+/* ---- subir ---- */
+function U(){const tabs=`<div class="tabs"><button class="btn g ${S.tab=='up'?'on':''}" onclick="setTab('up')">Subir</button><button class="btn g ${S.tab=='mine'?'on':''}" onclick="setTab('mine')">Mis publicaciones</button></div>`;
+ if(S.tab=='mine')return tabs+(S.mine.map(p=>{const h=(Date.now()-new Date(p.created_at))/H;
+  return `<div class="card row" style="margin:8px 0"><div class="th">${media(p)}</div><div class="sp"><b>${esc(p.title)}</b><br><span class="mut">${p.approved?'Publicada':'En revisión'} · 👍 ${S.vc[p.id]||0} votos</span></div>
+  ${h<24?`<button class="btn s sm" onclick="edit('${p.id}')">Editar (${Math.ceil(24-h)} h)</button>`:''}${h<72?`<button class="btn g sm" onclick="del('${p.id}')">Borrar (${Math.ceil(72-h)} h)</button>`:'<span class="mut">Plazo de borrado vencido</span>'}</div>`}).join('')||'<p class="mut">Aún no has subido nada.</p>');
+ const f=S.file;return tabs+cd()+`<div class="card">${f?`<div style="text-align:center">${f.kind=='imagen'?`<img src="${f.url}" style="max-width:100%;max-height:300px;border-radius:12px">`:f.kind=='video'?`<video src="${f.url}" controls style="max-width:100%;max-height:300px"></video>`:`<div style="font-size:3rem">📄</div>PDF listo para subir`}</div>
+ <input id="ti" maxlength="120" placeholder="Título"><textarea id="de" rows="3" placeholder="Descripción (opcional, máx. 67 palabras)" oninput="$('#wc').textContent=words(this.value)+'/67'"></textarea><div class="mut" id="wc">0/67</div>
+ <input id="ar" maxlength="30" placeholder="Apodo de artista (así aparecerá tu obra)"><div class="mut" style="margin:-4px 0 10px">Usa un apodo, no tu nombre real. Nada ofensivo.</div>
+ <div class="row"><button class="btn" id="pb" onclick="pub()">Subir</button><button class="btn g" onclick="S.file=null;render()">Cambiar archivo</button></div>`
+ :`<div class="drop" onclick="$('#fi').click()"><div class="plus">+</div><p>Puedes subir <b>fotos, videos o PDF</b></p><p class="mut">Imagen (JPG, PNG, WEBP) · Video (MP4, WEBM) hasta 25 MB · PDF hasta 10 MB</p></div><input id="fi" type="file" hidden accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,application/pdf" onchange="pick(this.files[0])">`}</div>`}
+async function setTab(t){S.tab=t;if(t=='mine')await load('up');render()}
+function compress(f){return new Promise((ok,no)=>{const i=new Image();i.onload=()=>{const k=Math.min(1,1600/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);c.toBlob(b=>ok(b),'image/jpeg',.82)};i.onerror=()=>no(new Error('Imagen no válida'));i.src=URL.createObjectURL(f)})}
+async function pick(f){if(!f)return;const t=f.type;
+ if(!/^(image\/(jpeg|png|webp)|video\/(mp4|webm)|application\/pdf)$/.test(t))return toast('Formato no permitido');
+ const kind=t.startsWith('image')?'imagen':t.startsWith('video')?'video':'pdf',lim=kind=='imagen'?15:kind=='video'?25:10;
+ if(f.size>lim*1048576)return toast('Máximo '+lim+' MB para este tipo de archivo');
+ try{let b=f,m=t;if(kind=='imagen'){b=await compress(f);m='image/jpeg'}S.file={blob:b,mime:m,name:f.name,kind,url:URL.createObjectURL(b)};render()}catch(e){toast(e.message)}}
+async function pub(){if(closed())return toast('El concurso ya cerró');
+ const t=$('#ti').value.trim(),d=$('#de').value.trim(),a=$('#ar').value.trim();
+ if(!t||!a)return toast('Falta el título o el apodo de artista');if([t,d,a].some(bad))return toast('Revisa el texto: no se permiten palabras ofensivas');if(words(d)>67)return toast('La descripción admite máximo 67 palabras');
+ $('#pb').disabled=true;const path=`${S.user.id}/${Date.now()}.${S.file.mime.split('/')[1]}`;
+ try{chk(await sb.storage.from('obras').upload(path,S.file.blob,{contentType:S.file.mime}));
+  const r=await sb.from('posts').insert({kind:S.file.kind,file_path:path,title:t,descr:d||null,artist:a});
+  if(r.error){await sb.storage.from('obras').remove([path]);throw r.error}
+  toast('¡Enviada! Se publicará cuando sea aprobada');S.file=null;await setTab('mine')}
+ catch(e){toast('No se pudo subir: '+e.message);$('#pb').disabled=false}}
+async function edit(id){const p=S.mine.find(x=>x.id==id),t=prompt('Título',p.title);if(t===null)return;const d=prompt('Descripción (máx. 67 palabras)',p.descr||'');if(d===null)return;
+ if(words(d)>67)return toast('Máximo 67 palabras');const a=prompt('Apodo de artista',p.artist);if(a===null)return;if([t,d,a].some(bad))return toast('No se permiten palabras ofensivas');
+ const r=await sb.from('posts').update({title:t.trim()||p.title,descr:d.trim()||null,artist:a.trim()||p.artist}).eq('id',id);
+ if(r.error)return toast('No se pudo editar (¿pasaron 24 h?)');await setTab('mine')}
+async function del(id){if(!confirm('¿Borrar esta publicación?'))return;const p=S.mine.find(x=>x.id==id);
+ const r=await sb.from('posts').delete().eq('id',id);if(r.error)return toast('No se pudo borrar (¿pasaron 72 h?)');
+ await sb.storage.from('obras').remove([p.file_path]);await setTab('mine')}
+
+/* ---- muro de votación ---- */
+function V(){const q=S.q.toLowerCase(),l=S.posts.filter(p=>(p.title+p.artist+(p.descr||'')).toLowerCase().includes(q));
+ return `<div class="row" style="max-width:560px;margin:auto"><h2 class="sp">Muro</h2><input id="sq" class="${S.sq||S.q?'o':''}" placeholder="Buscar nombre o tema" value="${esc(S.q)}" oninput="S.q=this.value;clearTimeout(window.tq);window.tq=setTimeout(()=>{render();$('#sq').focus();$('#sq').setSelectionRange(99,99)},250)"><button class="lupa" onclick="S.sq=!S.sq;render();$('#sq').focus()">🔍</button></div>${cd()}
+ <div class="grid">${l.map(card).join('')||'<p class="mut" style="text-align:center">Aún no hay obras publicadas.</p>'}</div>`}
+function card(p,i){const cs=S.cm.filter(c=>c.post_id==p.id),me=S.my==p.id;
+ return `<div class="card post" style="animation-delay:${Math.min(i,8)*60}ms"><div class="i row"><div class="av">${esc((p.artist[0]||'?').toUpperCase())}</div><div class="sp"><b>${esc(p.artist)}</b><br><span class="mut">${ago(p.created_at)}</span></div><button class="lk" title="Reportar" onclick="rep('${p.id}',null)">⚑ Reportar</button></div>
+ <div class="i"><b>${esc(p.title)}</b><div>${esc(p.descr||'')}</div></div><div class="m">${media(p)}</div>
+ <div class="i row mut"><span>👍 ${S.vc[p.id]||0}</span><span class="sp"></span><span style="cursor:pointer" onclick="tc('${p.id}')">${cs.length} comentarios</span></div>
+ <div class="i row" style="border-top:1px solid var(--bd)"><button class="fb sp ${me?'on':''}" onclick="like('${p.id}')">👍 Me gusta</button><button class="fb sp" onclick="tc('${p.id}')">💬 Comentar</button></div>
+ ${S.openC[p.id]?`<div class="cms">${cs.map(c=>`<div class="cm"><b>${esc(c.author)}</b> ${esc(c.body)} <button class="lk" onclick="rep(null,'${c.id}')">⚑</button>${c.owner==S.user.id?`<button class="lk" onclick="delC('${c.id}')">🗑</button>`:''}</div>`).join('')||'<p class="mut">Sé el primero en comentar.</p>'}
+ <div class="warn">Comenta con respeto: no se permiten mensajes ofensivos.</div><div class="row"><input id="ci${p.id}" class="sp" maxlength="300" placeholder="Escribe un comentario" style="margin:0" onkeydown="if(event.key=='Enter')comment('${p.id}')"><button class="btn s sm" onclick="comment('${p.id}')">Enviar</button></div></div>`:''}</div>`}
+const tc=id=>{S.openC[id]=!S.openC[id];render()};
+async function like(id){if(closed())return toast('La votación ya cerró');
+ try{if(S.my===id){chk(await sb.from('votes').delete().eq('user_id',S.user.id));S.my=null;S.vc[id]=Math.max((S.vc[id]||1)-1,0)}
+  else if(S.my)return toast('Solo tienes un voto: quítalo de la otra obra para cambiarlo');
+  else{chk(await sb.from('votes').insert({post_id:id}));S.my=id;S.vc[id]=(S.vc[id]||0)+1}render()}
+ catch(e){toast(/row-level|policy|violates/i.test(e.message)?'No puedes votar por tu propia obra':e.message)}}
+async function comment(pid){const el=$('#ci'+pid),body=el.value.trim();if(!body)return;
+ if(bad(body))return toast('Tu comentario contiene palabras ofensivas');
+ if(!S.nick){const n=(prompt('Elige un apodo para tus comentarios (nada ofensivo)')||'').trim().slice(0,30);if(!n)return;if(bad(n))return toast('Ese apodo no está permitido');S.nick=n}
+ try{const r=chk(await sb.from('comments').insert({post_id:pid,author:S.nick,body}).select().single());S.cm.push(r);render()}catch(e){toast(e.message)}}
+async function delC(id){try{chk(await sb.from('comments').delete().eq('id',id));S.cm=S.cm.filter(c=>c.id!=id);render()}catch(e){toast(e.message)}}
+async function rep(pid,cid){if(!confirm('¿Reportar este contenido como inapropiado?'))return;
+ const r=await sb.from('reports').insert({post_id:pid,comment_id:cid});toast(r.error?'No se pudo enviar el reporte':'Gracias, lo revisaremos')}
+
+/* ---- panel de control ---- */
+function A(){const a=S.adm,T=[['pend','Pendientes ('+a.posts.filter(p=>!p.approved).length+')'],['all','Obras'],['cm','Comentarios'],['rep','Reportes ('+a.rep.length+')'],['ui','Interfaz']];
+ const tabs=`<div class="tabs">${T.map(([k,l])=>`<button class="btn g sm ${S.at==k?'on':''}" onclick="S.at='${k}';render()">${l}</button>`).join('')}</div>`;
+ const row=p=>`<div class="card row" style="margin:6px 0"><div class="th">${media(p)}</div><span class="sp"><b>${esc(p.title)}</b><br><span class="mut">${esc(p.artist)} · ${p.kind} · 👍 ${a.vc[p.id]||0} · ${p.approved?'publicada':'pendiente'}</span></span>${p.approved?'':`<button class="btn s sm" onclick="approve('${p.id}')">Aprobar</button>`}<button class="btn g sm" onclick="admDel('${p.id}')">Eliminar</button></div>`;
+ const tot=Object.values(a.vc).reduce((x,y)=>x+y,0),st=`<div class="row"><div class="card sp"><h2>${a.posts.length}</h2>obras</div><div class="card sp"><h2>${tot}</h2>votos</div><div class="card sp"><h2>${a.cm.length}</h2>comentarios</div></div>`;
+ if(S.at=='pend')return tabs+st+(a.posts.filter(p=>!p.approved).map(row).join('')||'<p class="mut">No hay obras pendientes.</p>');
+ if(S.at=='all')return tabs+st+(a.posts.map(row).join('')||'<p class="mut">Sin obras.</p>');
+ if(S.at=='cm')return tabs+(a.cm.map(c=>`<div class="card row" style="margin:6px 0"><span class="sp"><b>${esc(c.author)}</b>: ${esc(c.body)}</span><button class="btn g sm" onclick="admDelC('${c.id}')">Eliminar</button></div>`).join('')||'<p class="mut">Sin comentarios.</p>');
+ if(S.at=='rep')return tabs+(a.rep.map(r=>`<div class="card row" style="margin:6px 0"><span class="sp">${r.post_id?'Obra: <b>'+esc(r.posts&&r.posts.title)+'</b>':'Comentario: <b>'+esc(r.comments&&r.comments.body)+'</b>'}<br><span class="mut">${ago(r.created_at)}</span></span>${r.post_id?`<button class="btn g sm" onclick="admDel('${r.post_id}')">Eliminar obra</button>`:`<button class="btn g sm" onclick="admDelC('${r.comment_id}')">Eliminar comentario</button>`}</div>`).join('')||'<p class="mut">Sin reportes.</p>');
+ return tabs+`<div class="card"><h3>Editar interfaz</h3>Título<input id="c1" value="${esc(S.cfg.title)}">Subtítulo<input id="c2" value="${esc(S.cfg.sub)}">Color principal<input id="c3" type="color" value="${S.cfg.color}">Fecha de cierre (votos y subidas)<input id="c4" type="date" value="${S.cfg.close||''}"><button class="btn s" onclick="saveCfg()">Guardar</button></div>`}
+async function approve(id){try{chk(await sb.rpc('approve_post',{pid:id,ok:true}));await loadAdmin();render();toast('Obra aprobada')}catch(e){toast(e.message)}}
+async function admDel(id){if(!confirm('¿Eliminar esta obra?'))return;const p=S.adm.posts.find(x=>x.id==id);
+ try{chk(await sb.from('posts').delete().eq('id',id));if(p)await sb.storage.from('obras').remove([p.file_path]);await loadAdmin();render()}catch(e){toast(e.message)}}
+async function admDelC(id){try{chk(await sb.from('comments').delete().eq('id',id));await loadAdmin();render()}catch(e){toast(e.message)}}
+async function saveCfg(){const c={...S.cfg,title:$('#c1').value.trim()||'Gota a Gota',sub:$('#c2').value.trim(),color:$('#c3').value,close:$('#c4').value};
+ try{chk(await sb.from('config').update({data:c}).eq('id',1));S.cfg=c;render();toast('Interfaz actualizada')}catch(e){toast(e.message)}}
+
+for(let i=0;i<14;i++){const b=document.createElement('div'),s=10+Math.random()*30;b.className='bub';b.style.cssText=`left:${Math.random()*100}vw;width:${s}px;height:${s}px;animation-duration:${8+Math.random()*12}s;animation-delay:${-Math.random()*15}s`;document.body.append(b)}
+render();
+</script></body></html>
