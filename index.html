@@ -61,7 +61,7 @@ const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const DOM='@huanuco.coar.edu.pe',H=36e5;
 // sesión guardada solo en la pestaña (sessionStorage): se borra al cerrar la pestaña y evita pedir un código en cada recarga
 const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,storage:window.sessionStorage,autoRefreshToken:true,detectSessionInUrl:false}});
-const S={user:null,admin:false,view:'login',stack:[],tab:'up',at:'pend',q:'',sq:0,file:null,posts:[],vc:{},cm:[],likes:new Set(),openC:{},mine:[],zoom:null,nick:null,step:0,em:'',rp:{},aq:'',
+const S={user:null,admin:false,view:'login',stack:[],tab:'up',at:'pend',q:'',sq:0,file:null,posts:[],vc:{},cm:[],likes:new Set(),openC:{},mine:[],zoom:null,nick:null,step:0,em:'',viaCode:0,rp:{},aq:'',
  adm:{posts:[],cm:[],rep:[],vc:{},us:[]},cfg:{title:'Gota a Gota',sub:'Concurso de arte por el cuidado del agua',color:'#2A9DB8',close:''}};
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const words=s=>s.trim()?s.trim().split(/\s+/).length:0;
@@ -92,7 +92,7 @@ sb.auth.onAuthStateChange((ev,ses)=>{
  else if(!ses&&S.user){S.user=null;go('login')}});
 async function boot(){try{const[c,a]=await Promise.all([sb.from('config').select('data').eq('id',1).single(),sb.rpc('is_admin')]);
  if(c.data&&c.data.data)S.cfg={...S.cfg,...c.data.data};S.admin=a.data===true}catch(e){}
- S.step=0;S.em='';S.stack=[];go('home')}
+ S.step=0;S.em='';S.stack=[];if(S.viaCode){S.viaCode=0;go('pw')}else go('home')}
 const mask=d=>d.slice(0,2)+'****'+d.slice(-2);
 async function sendCode(){const d=($('#dni').value||'').trim();
  if(!/^\d{8}$/.test(d))return toast('Escribe tu DNI de 8 dígitos');
@@ -101,9 +101,19 @@ async function sendCode(){const d=($('#dni').value||'').trim();
  catch(x){b.disabled=false;const m=x.message||'';
   toast(/Database error|lista/i.test(m)?'Tu DNI no está en la lista del concurso. Consulta con el organizador.':/rate|seconds|many/i.test(m)?'Espera un minuto antes de pedir otro código':m)}}
 async function verify(){const t=($('#tk').value||'').trim().replace(/\s/g,'');if(t.length<6)return toast('Escribe el código que te llegó');
- const b=$('#ab');b.disabled=true;
+ const b=$('#ab');b.disabled=true;S.viaCode=1;
  try{chk(await sb.auth.verifyOtp({email:S.em,token:t,type:'email'}))}
- catch(x){b.disabled=false;toast(/expired|invalid/i.test(x.message||'')?'Código incorrecto o vencido. Pide uno nuevo.':x.message)}}
+ catch(x){S.viaCode=0;b.disabled=false;toast(/expired|invalid/i.test(x.message||'')?'Código incorrecto o vencido. Pide uno nuevo.':x.message)}}
+async function loginPw(){const d=($('#dni').value||'').trim(),p=$('#pw').value;
+ if(!/^\d{8}$/.test(d))return toast('Escribe tu DNI de 8 dígitos');if(!p)return toast('Escribe tu contraseña');
+ const b=$('#ab');b.disabled=true;
+ try{chk(await sb.auth.signInWithPassword({email:d+DOM,password:p}))}
+ catch(x){b.disabled=false;const m=x.message||'';
+  toast(/Invalid login/i.test(m)?'DNI o contraseña incorrectos. Si es tu primera vez, usa "Primera vez o olvidé mi contraseña"':/not confirmed/i.test(m)?'Aún no verificaste tu correo: usa "Primera vez o olvidé mi contraseña"':/rate|many/i.test(m)?'Demasiados intentos. Espera unos minutos':m)}}
+async function savePw(){const p=$('#p1').value;if(p.length<8)return toast('Mínimo 8 caracteres');if(p!==$('#p2').value)return toast('Las contraseñas no coinciden');
+ if(p.includes(S.user.email.split('@')[0]))return toast('No uses tu DNI dentro de la contraseña');
+ const b=$('#ab');b.disabled=true;
+ try{chk(await sb.auth.updateUser({password:p}));toast('Contraseña guardada');go('home')}catch(e){b.disabled=false;toast(e.message)}}
 
 /* ---------- datos ---------- */
 async function loadFeed(){
@@ -120,20 +130,29 @@ async function loadAdmin(){
 
 /* ---------- vistas ---------- */
 function render(){document.documentElement.style.setProperty('--p',S.cfg.color);
- $('#app').innerHTML=head()+'<main>'+({login:L,home:Hm,up:U,vote:V,admin:A}[S.view])()+'</main>'+(S.zoom?`<div class="modal" onclick="S.zoom=null;render()"><img src="${S.zoom}" alt=""></div>`:'')}
+ $('#app').innerHTML=head()+'<main>'+({login:L,pw:P,home:Hm,up:U,vote:V,admin:A}[S.view])()+'</main>'+(S.zoom?`<div class="modal" onclick="S.zoom=null;render()"><img src="${S.zoom}" alt=""></div>`:'')}
 const head=()=>`<header>${S.user&&S.view!=='home'?'<button class="btn g sm" onclick="back()" title="Atrás">←</button>':''}<b>💧 ${esc(S.cfg.title)}</b><small>${esc(S.cfg.sub)}</small>${S.user?`<button class="btn g sm" onclick="go('home')">Inicio</button><button class="btn g sm" onclick="logout()">Salir</button>`:''}</header>
 <svg class="wave" viewBox="0 0 1200 30" preserveAspectRatio="none"><path d="M0 0h1200v10c-150 25-300 25-450 0S450-15 300 10 150 25 0 10z"/></svg>`;
 const cd=()=>{const d=closeD();if(!d)return'';const n=Math.ceil((d-Date.now())/864e5);return `<div class="cd">${closed()?'⌛ El concurso ya cerró':'⏳ Quedan '+n+' día'+(n==1?'':'s')+' · cierra el '+S.cfg.close}</div>`};
 function L(){const s=S.step;return `<div class="card" style="max-width:420px;margin:30px auto;text-align:center"><h2>Bienvenido/a</h2>
-${s?`<p>Enviamos un código a<br><b>${mask(S.em.split('@')[0])}${DOM}</b><br><span class="mut">Revisa también la carpeta de Spam. Puede tardar un minuto.</span></p>
+${s==1?`<p>Enviamos un código a<br><b>${mask(S.em.split('@')[0])}${DOM}</b><br><span class="mut">Revisa también la carpeta de Spam. Puede tardar un minuto.</span></p>
 <input id="tk" inputmode="numeric" maxlength="8" placeholder="Código" style="text-align:center;font-size:1.4rem;letter-spacing:4px" onkeydown="if(event.key=='Enter')verify()">
-<button class="btn s" id="ab" style="width:100%" onclick="verify()">Entrar</button>
-<p><button class="lk" onclick="S.step=0;render()">← Usar otro DNI o pedir un código nuevo</button></p>`
-:`<p class="mut">Escribe tu DNI. Te enviaremos un código a tu correo del colegio.</p>
+<button class="btn s" id="ab" style="width:100%" onclick="verify()">Continuar</button>
+<p><button class="lk" onclick="S.step=2;render()">← Usar otro DNI o pedir un código nuevo</button></p>`
+:s==2?`<p class="mut">Primera vez o contraseña olvidada: escribe tu DNI y te enviaremos un código a tu correo del colegio. Después crearás tu contraseña.</p>
 <input id="dni" inputmode="numeric" maxlength="8" placeholder="Tu DNI (8 dígitos)" style="text-align:center;font-size:1.2rem" onkeydown="if(event.key=='Enter')sendCode()">
 <button class="btn s" id="ab" style="width:100%" onclick="sendCode()">Enviar código</button>
-<p class="mut">El código llega a <b>tuDNI${DOM}</b>. Solo entran las personas inscritas en el concurso.</p>`}
+<p class="mut">El código llega a <b>tuDNI${DOM}</b>. Solo entran las personas inscritas en el concurso.</p>
+<p><button class="lk" onclick="S.step=0;render()">← Volver</button></p>`
+:`<p class="mut">Entra con tu DNI y tu contraseña.</p>
+<input id="dni" inputmode="numeric" maxlength="8" placeholder="Tu DNI (8 dígitos)" style="text-align:center;font-size:1.2rem">
+<input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password" onkeydown="if(event.key=='Enter')loginPw()">
+<button class="btn s" id="ab" style="width:100%" onclick="loginPw()">Entrar</button>
+<p><button class="lk" onclick="S.step=2;render()">Primera vez o olvidé mi contraseña</button></p>`}
 <details class="mut" style="text-align:left;margin-top:12px"><summary>Ver bases</summary><ul><li>Obras sobre el cuidado del agua: memes, videos, afiches.</li><li>Se publican con un apodo de artista; no se permiten palabras ofensivas.</li><li>Puedes dar me gusta a todas las obras que quieras (uno por obra); no a la propia.</li><li>Solo el autor de una obra puede responder los comentarios de su obra.</li><li>Puedes editar tu obra en las primeras 24 h y borrarla en las primeras 72 h.</li><li>Las obras se publican tras ser aprobadas.</li></ul></details></div>`}
+function P(){return `<div class="card" style="max-width:420px;margin:30px auto;text-align:center"><h2>Crea tu contraseña</h2><p class="mut">Tu correo ya quedó verificado. Con esta contraseña entrarás la próxima vez sin pedir código. No la compartas.</p>
+<input id="p1" type="password" placeholder="Contraseña (mínimo 8 caracteres)" autocomplete="new-password"><input id="p2" type="password" placeholder="Repite la contraseña" autocomplete="new-password" onkeydown="if(event.key=='Enter')savePw()">
+<button class="btn s" id="ab" style="width:100%" onclick="savePw()">Guardar y continuar</button></div>`}
 const Hm=()=>cd()+`<div class="two"><div class="card big" onclick="S.tab='up';go('up')"><div class="ic">🎨</div><h2>Sube tu obra</h2><p class="mut">Fotos, videos o PDF</p></div>
 <div class="card big" onclick="go('vote')"><div class="ic">👍</div><h2>Vota y descubre</h2><p class="mut">Mira, comenta y apoya</p></div>
 ${S.admin?`<div class="card big" onclick="go('admin')"><div class="ic">🛠️</div><h2>Panel de control</h2><p class="mut">Solo para ti</p></div>`:''}</div>`;
